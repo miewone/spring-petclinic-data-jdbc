@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic-deployment
+  namespace: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+  template:
+    metadata:
+      labels:
+        app: petclinic
+    spec:
+      securityContext:
+        runAsUser: 999 
+      containers:
+      - name: petclinic
+        image: miewone/petclinic:0.0.2
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MYSQL_URL
+          valueFrom:
+            secretKeyRef:
+              name: petclinic-secret
+              key: mysql_url
+        livenessProbe:
+          httpGet:
+            path: /manage/health/liveness
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /manage/health/readiness
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: log-volume
+          mountPath: /path/to/app/logs
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: log-volume
+        hostPath:
+          path: /logs
+          type: Directory
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
