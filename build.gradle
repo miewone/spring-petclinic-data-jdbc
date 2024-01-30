@@ -39,15 +39,17 @@ dependencies {
     // Spring Boot DevTools
     developmentOnly 'org.springframework.boot:spring-boot-devtools:3.2.1'
 }
+
 group = 'org.springframework.samples'
 version = '3.0.0.BUILD-SNAPSHOT'
 description = 'petclinic'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
-test {
+
     useJUnitPlatform()
     systemProperty 'spring.profiles.active', 'test'
 }
+
 
 
 tasks.withType(JavaCompile) {
@@ -58,6 +60,8 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
+
 bootBuildImage {
     imageName = 'petclinic_gradle:0.0.1'
 }
+
