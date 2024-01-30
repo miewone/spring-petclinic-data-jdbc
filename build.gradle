@@ -62,6 +62,6 @@ tasks.withType(Javadoc) {
 
 
 bootBuildImage {
-    imageName = 'petclinic_gradle:0.0.1'
+    imageName = 'miewone/petclinic:0.0.2'
 }
 
