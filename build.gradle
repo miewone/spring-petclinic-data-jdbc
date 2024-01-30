@@ -3,56 +3,52 @@
  */
 
 plugins {
-    id 'java-library'
-    id 'maven-publish'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'java'
 }
-
 repositories {
-    mavenLocal()
-    maven {
-        url = uri('https://repo.spring.io/snapshot')
-    }
-
-    maven {
-        url = uri('https://repo.spring.io/milestone')
-    }
-
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
+    mavenCentral()
 }
 
 dependencies {
-    api libs.org.springframework.boot.spring.boot.starter.actuator
-    api libs.org.springframework.boot.spring.boot.starter.validation
-    api libs.org.springframework.boot.spring.boot.starter.cache
-    api libs.org.springframework.boot.spring.boot.starter.data.jdbc
-    api libs.org.springframework.boot.spring.boot.starter.web
-    api libs.org.springframework.boot.spring.boot.starter.thymeleaf
-    api libs.org.flywaydb.flyway.core
-    api libs.org.flywaydb.flyway.mysql
-    api libs.com.github.ben.manes.caffeine.caffeine
-    api libs.org.webjars.jquery
-    api libs.org.webjars.jquery.ui
-    api libs.org.webjars.bootstrap
-    api libs.org.springframework.boot.spring.boot.devtools
-    runtimeOnly libs.com.mysql.mysql.connector.j
-    testImplementation libs.org.springframework.boot.spring.boot.starter.test
-    testImplementation libs.org.testcontainers.mysql
-}
+    // Spring and Spring Boot dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.1'
+    implementation 'org.springframework.boot:spring-boot-starter-cache:3.2.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:3.2.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.1'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.1'
+    testImplementation 'org.testcontainers:mysql:1.17.6'
 
+    // Databases
+    runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
+    implementation 'org.flywaydb:flyway-core:10.5.0'
+    implementation 'org.flywaydb:flyway-mysql:10.5.0'
+
+    // Caching
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
+
+
+    // WebJars
+    implementation 'org.webjars:jquery:2.2.4'
+    implementation 'org.webjars:jquery-ui:1.11.4'
+    implementation 'org.webjars:bootstrap:3.3.6'
+
+
+    // Spring Boot DevTools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:3.2.1'
+}
 group = 'org.springframework.samples'
 version = '3.0.0.BUILD-SNAPSHOT'
 description = 'petclinic'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
+test {
+    useJUnitPlatform()
+    systemProperty 'spring.profiles.active', 'test'
 }
+
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -60,4 +56,8 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
+}
+
+bootBuildImage {
+    imageName = 'petclinic_gradle:0.0.1'
 }
