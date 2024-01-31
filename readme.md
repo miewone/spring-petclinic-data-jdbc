@@ -53,7 +53,7 @@ Helm : v3.13.0
 nginx-ingress : 1.9.6
 
 ## 설정
-배포를 하기전에 nginx-ingress-controller 를 사용하기 위해서는 우선적으로 nginx-ingress를 설치해줘야합니다.
+배포 전 nginx-ingress-controller 를 사용하기 위해서는 우선적으로 nginx-ingress를 설치해줘야합니다.
 
 ### Helm 이용
 
