@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: db
+  namespace: default
 spec:
   serviceName: "db"
   replicas: 1
@@ -23,11 +24,6 @@ spec:
         - name: MYSQL_DATABASE
           value: "petclinic"
         - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: petclinic-secret
-              key: mysql_pw
-        - name: MYSQL_PWD
           valueFrom:
             secretKeyRef:
               name: petclinic-secret

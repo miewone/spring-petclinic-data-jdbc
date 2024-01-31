@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: petclinic-deployment
-  namespace: petclinic
+  namespace: default
+
 spec:
   replicas: 1
   selector:
@@ -15,9 +16,22 @@ spec:
     spec:
       securityContext:
         runAsUser: 999 
+      initContainers:
+      - command:
+        - /bin/sh
+        - -c
+        - until nc -zv $DB_HOST $DB_PORT -w1; do echo 'waiting for db'; sleep 1; done
+        env:
+        - name: DB_HOST
+          value: db-service.petclinic.svc.cluster.local
+        - name: DB_PORT
+          value: "3306"
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        name: wait-for-mysql
       containers:
       - name: petclinic
-        image: miewone/petclinic:0.0.2
+        image: miewone/petclinic:latest
         ports:
         - containerPort: 8080
         env:
@@ -40,7 +54,7 @@ spec:
           periodSeconds: 5
         volumeMounts:
         - name: log-volume
-          mountPath: /path/to/app/logs
+          mountPath: /workdir/server/log
       terminationGracePeriodSeconds: 30
       volumes:
       - name: log-volume
